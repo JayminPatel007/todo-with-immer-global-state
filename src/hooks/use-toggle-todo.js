@@ -7,7 +7,6 @@ export const useToggleTodo = () => {
         setDraft(draft => {
             const todo = draft.todos.find(todo => todo.id === id);
             if (todo) {
-                console.log(todo);
                 todo.completed = !todo.completed
             }
         })
