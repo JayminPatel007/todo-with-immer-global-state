@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useDispatch, useTrackedState } from './store';
+import { useQuery, useDeleteTodo, useToggleTodo } from "./hooks";
 import { useFlusher } from "./util";
 
 const renderHighlight = (title, query) => {
@@ -17,29 +17,24 @@ const renderHighlight = (title, query) => {
 };
 
 const TodoItem = ({ id, title, completed }) => {
-    const dispatch = useDispatch();
-    const state = useTrackedState();
-    const delTodo = () => {
-        dispatch({
-            type: 'DELETE_TODO',
-            id
-        });
-    };
+    const { getQuery } = useQuery();
+    const deleteTodo = useDeleteTodo();
+    const toggleTodo = useToggleTodo();
 
     return (
         <li ref={useFlusher()}>
             <input
                 type='checkbox'
                 checked={!!completed}
-                onChange={() => dispatch({type: 'TOGGLE_TODO', id})}
+                onChange={() => toggleTodo(id)}
             />
             <span
                 style={{
                     textDecoration: completed ? 'line-through' : 'none'
                 }}>
-                {completed ? title : renderHighlight(title, state.query)}
+                {completed ? title : renderHighlight(title, getQuery())}
             </span>
-            <button onClick={delTodo}>Delete</button>
+            <button onClick={() => deleteTodo(id)}>Delete</button>
         </li>
     )
 };
